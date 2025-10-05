@@ -45,15 +45,15 @@ from ngs_tools import run_dna_rna_tools
 #  - "complement"            # DNA or RNA (auto-detected by presence of U)
 #  - "reverse_complement"
 
-# Single sequence
-print(run_dna_rna_tools("ATGC", tool="is_nucleic_acid"))  # True
-print(run_dna_rna_tools("ATGC", tool="transcribe"))       # "UACG"
-print(run_dna_rna_tools("ATGc", tool="reverse"))          # "cGTA"
-print(run_dna_rna_tools("ATGC", tool="complement"))       # "TACG"
-print(run_dna_rna_tools("ATGC", tool="reverse_complement"))  # "CGTA"
+# Usage with single sequence
+print(run_dna_rna_tools("ATGC", "is_nucleic_acid"))  # True
+print(run_dna_rna_tools("ATGC", "transcribe"))       # "UACG"
+print(run_dna_rna_tools("ATGc", "reverse"))          # "cGTA"
+print(run_dna_rna_tools("ATGC", "complement"))       # "TACG"
+print(run_dna_rna_tools("ATGC", "reverse_complement"))  # "CGTA"
 
-# Multiple sequences -> returns a list in the same order
-print(run_dna_rna_tools("ATGC", "AUGC", tool="is_nucleic_acid"))
+# Usage with multiple sequences -> returns a list in the same order
+print(run_dna_rna_tools("ATGC", "AUGC", "is_nucleic_acid"))
 # [True, True]
 ```
 
