@@ -38,13 +38,7 @@ def _convertor_symbols(seq: str, mapper: dict[str, str]) -> str:
     Returns:
         str: Converted sequence with original character cases preserved.
     """
-    converted_seq = ""
-    for letter in seq:
-        converted_letter = mapper[letter.upper()]
-        converted_seq += (
-            converted_letter if letter.isupper() else converted_letter.lower()
-        )
-    return converted_seq
+    return "".join(mapper[letter] for letter in seq)
 
 
 def is_check_as_nucleic_acid(seq: str) -> bool:

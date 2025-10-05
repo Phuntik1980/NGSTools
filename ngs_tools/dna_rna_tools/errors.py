@@ -8,3 +8,7 @@ sequence_not_transcribed = (
     "The sequence '{}' cannot be transcribed."
     " Possible, it contains 'U' nucleotide"
 )
+
+composite_error_message = (
+    "Please enter a valid nucleic " "acid sequence or a tool :\n{}"
+)

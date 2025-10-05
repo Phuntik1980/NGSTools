@@ -6,6 +6,7 @@ from .dna_rna_tools import (
     is_check_as_nucleic_acid,
 )
 from .constants import IS_NUCLEIC_ACID_TOOL
+from .errors import composite_error_message
 
 __all__ = [
     is_valid_seq,
@@ -14,4 +15,5 @@ __all__ = [
     TOOLS_MAPPER,
     IS_NUCLEIC_ACID_TOOL,
     is_check_as_nucleic_acid,
+    composite_error_message,
 ]

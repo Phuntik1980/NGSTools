@@ -3,6 +3,10 @@ DNA_COMPLEMENT = {
     "T": "A",
     "C": "G",
     "G": "C",
+    "a": "T",
+    "t": "A",
+    "c": "G",
+    "g": "C",
 }
 
 RNA_COMPLEMENT = {
@@ -10,6 +14,10 @@ RNA_COMPLEMENT = {
     "A": "U",
     "C": "G",
     "G": "C",
+    "u": "A",
+    "a": "U",
+    "c": "G",
+    "g": "C",
 }
 
 TRANSCRIBE = {
@@ -17,6 +25,10 @@ TRANSCRIBE = {
     "T": "A",
     "C": "G",
     "G": "C",
+    "a": "U",
+    "t": "A",
+    "c": "G",
+    "g": "C",
 }
 
 RNA_SIGN = "U"

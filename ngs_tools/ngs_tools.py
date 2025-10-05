@@ -7,13 +7,12 @@ from ngs_tools.dna_rna_tools import (
     TOOLS_MAPPER,
     IS_NUCLEIC_ACID_TOOL,
     is_check_as_nucleic_acid,
+    composite_error_message,
 )
 from ngs_tools.filter_fastq import fastq_tools, GC_MIN, GC_MAX
 
 
-def run_dna_rna_tools(
-    *nucleic_acids: NUCLEIC_ACID_TYPE, tool: str
-) -> Union[Optional[NUCLEIC_ACID_TYPE], bool]:
+def run_dna_rna_tools(*args) -> Union[Optional[NUCLEIC_ACID_TYPE], bool]:
     """Run a DNA/RNA utility on one or more sequences.
 
     If tool is "is_nucleic_acid", validation is applied directly; otherwise
@@ -28,8 +27,10 @@ def run_dna_rna_tools(
         result of the tool. For multiple inputs: list of results. Returns None
         if validation fails.
     """
+    *nucleic_acids, tool = args
     conditions = is_valid_seq(*nucleic_acids) and is_valid_instrument(tool)
     if not conditions:
+        print(composite_error_message.format(TOOLS_MAPPER.keys()))
         return None
 
     result = []
