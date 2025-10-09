@@ -1,9 +1,9 @@
-from .constants import GC_MIN, GC_MAX
-from .fastq_tools import fastq_filter, FASTQ_TYPE
+from .constants import GC_MAX, GC_MIN
+from .fastq_tools import checking_conditions, fastq_filter
 
 __all__ = [
     GC_MIN,
     GC_MAX,
     fastq_filter,
-    FASTQ_TYPE,
+    checking_conditions,
 ]

@@ -1,8 +1,59 @@
-from typing import Optional, Union, Callable
+import os
 from collections import Counter
-from ngs_tools.filter_fastq.constants import Nucleotide, QUALITY_SCORE
+from logging import getLogger
+from typing import Callable, Optional, Union
 
-FASTQ_TYPE = dict[str, tuple[str, str]]
+from ngs_tools.filter_fastq import GC_MAX, GC_MIN
+from ngs_tools.filter_fastq.constants import QUALITY_SCORE, Nucleotide
+from ngs_tools.utils import parse_fastq, write_fastq
+
+logger = getLogger(__name__)
+
+
+def checking_conditions(
+    input_fastq: str,
+    output_fastq: str,
+    gc_bounds: Union[int, tuple[int, int]] = (0, 100),
+    length_bounds: Union[int, tuple[int, int]] = (0, 2**32),
+    quality_threshold: int = 0,
+):
+    if not input_fastq:
+        logger.warning("No sequences provided")
+        return None
+
+    if input_fastq == output_fastq:
+        logger.warning("Input and output files must be different")
+        return None
+
+    if not os.path.isfile(input_fastq):
+        logger.warning(f"Input file {input_fastq} does not exist")
+        return None
+
+    if not os.path.isdir(output_fastq):
+        logger.warning(f"Output directory {output_fastq} does not exist")
+        return None
+
+    if isinstance(gc_bounds, tuple):
+        if gc_bounds[0] < GC_MIN or gc_bounds[1] > GC_MAX:
+            logger.warning("GC bounds must be in range " f"{GC_MIN} - {GC_MAX}")
+            return None
+    elif gc_bounds < GC_MIN or gc_bounds > GC_MAX:
+        logger.warning("GC bounds must be in range " f"{GC_MIN} - {GC_MAX}")
+        return None
+
+    if isinstance(length_bounds, tuple):
+        if length_bounds[0] < 0:
+            logger.warning("Length bounds must be >= 0")
+            return None
+    elif length_bounds < 0:
+        logger.warning("Length bounds must be >= 0")
+        return None
+
+    if quality_threshold < 0:
+        logger.warning("Quality threshold must be >= 0")
+        return None
+
+    return True
 
 
 def _count_gc(seq: str) -> int:
@@ -119,11 +170,12 @@ def _is_filter_seq(
 
 
 def fastq_filter(
-    seqs: FASTQ_TYPE,
+    input_fastq: str,
+    output_fastq: str,
     gc_bounds: Union[int, tuple[int, int]],
     length_bounds: Union[int, tuple[int, int]],
     quality_threshold: int,
-) -> Optional[FASTQ_TYPE]:
+) -> None:
     """Filter FASTQ sequences by GC content, length, and quality.
 
     Args:
@@ -139,15 +191,17 @@ def fastq_filter(
         Optional[FASTQ_TYPE]: A dict of sequences that passed filters (might be
         empty). Prints the number of filtered-out sequences.
     """
-    filtered = {}
     not_passed = 0
-    for seq_id, (seq, quality_seq) in seqs.items():
+    for seq_item in parse_fastq(input_fastq):
         is_passed = _is_filter_seq(
-            seq, quality_seq, gc_bounds, length_bounds, quality_threshold
+            seq_item.sequence,
+            seq_item.quality,
+            gc_bounds,
+            length_bounds,
+            quality_threshold,
         )
         if is_passed:
-            filtered[seq_id] = (seq, quality_seq)
+            write_fastq(output_fastq, seq_item)
         else:
             not_passed += 1
     print(f"Filtered {not_passed} sequences")
-    return filtered

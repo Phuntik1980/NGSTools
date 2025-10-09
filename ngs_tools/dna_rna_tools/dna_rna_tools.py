@@ -1,5 +1,6 @@
 from typing import Optional, Union
-from ngs_tools.dna_rna_tools import errors, constants
+
+from ngs_tools.dna_rna_tools import constants, errors
 
 NUCLEIC_ACID_TYPE = Union[Optional[str], list[Optional[str]]]
 
