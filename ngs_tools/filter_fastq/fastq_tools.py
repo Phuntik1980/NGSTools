@@ -36,9 +36,7 @@ def checking_conditions(
 
     if isinstance(gc_bounds, tuple):
         if gc_bounds[0] < GC_MIN or gc_bounds[1] > GC_MAX:
-            logger.warning(
-                "GC bounds must be in range " f"{GC_MIN} - {GC_MAX}"
-            )
+            logger.warning("GC bounds must be in range " f"{GC_MIN} - {GC_MAX}")
             return None
     elif gc_bounds < GC_MIN or gc_bounds > GC_MAX:
         logger.warning("GC bounds must be in range " f"{GC_MIN} - {GC_MAX}")
