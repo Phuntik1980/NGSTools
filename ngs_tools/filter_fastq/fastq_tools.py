@@ -1,11 +1,12 @@
 import os
 from collections import Counter
+from datetime import datetime
 from logging import getLogger
-from typing import Callable, Optional, Union
+from typing import Callable, Union
 
 from ngs_tools.filter_fastq import GC_MAX, GC_MIN
-from ngs_tools.filter_fastq.constants import QUALITY_SCORE, Nucleotide
-from ngs_tools.utils import parse_fastq, write_fastq
+from ngs_tools.filter_fastq.constants import PHRED_SCORE, Nucleotide
+from ngs_tools.utils import Serializer, parse_fastq, write_data
 
 logger = getLogger(__name__)
 
@@ -35,7 +36,9 @@ def checking_conditions(
 
     if isinstance(gc_bounds, tuple):
         if gc_bounds[0] < GC_MIN or gc_bounds[1] > GC_MAX:
-            logger.warning("GC bounds must be in range " f"{GC_MIN} - {GC_MAX}")
+            logger.warning(
+                "GC bounds must be in range " f"{GC_MIN} - {GC_MAX}"
+            )
             return None
     elif gc_bounds < GC_MIN or gc_bounds > GC_MAX:
         logger.warning("GC bounds must be in range " f"{GC_MIN} - {GC_MAX}")
@@ -121,7 +124,7 @@ def _count_quality(quality_seq: str) -> int:
         int: Rounded mean Phred score.
     """
     mean_score = sum(
-        map(lambda quality: QUALITY_SCORE[ord(quality)], quality_seq)
+        map(lambda quality: ord(quality) - PHRED_SCORE, quality_seq)
     ) / len(quality_seq)
     return round(mean_score)
 
@@ -175,23 +178,26 @@ def fastq_filter(
     gc_bounds: Union[int, tuple[int, int]],
     length_bounds: Union[int, tuple[int, int]],
     quality_threshold: int,
-) -> None:
+    serializer: Serializer,
+):
     """Filter FASTQ sequences by GC content, length, and quality.
 
     Args:
-        seqs (FASTQ_TYPE): Mapping from sequence id to (sequence, quality)
-            tuple.
+        input_fastq (str): Path to an input FASTQ file.
+        output_fastq (str): Path to an output directory.
         gc_bounds (Union[int, tuple[int, int]]): GC percent upper bound or
             (min, max) bounds.
         length_bounds (Union[int, tuple[int, int]]): Length upper bound or
             (min, max) bounds.
         quality_threshold (int): Minimal acceptable mean Phred score.
+        serializer (Serializer): Serializer object.
 
     Returns:
-        Optional[FASTQ_TYPE]: A dict of sequences that passed filters (might be
-        empty). Prints the number of filtered-out sequences.
+        None
     """
-    not_passed = 0
+    not_passed, passed = 0, 0
+    filename = f'filtered_{datetime.now().strftime("%Y%m%d%H%M%S")}.fastq'
+
     for seq_item in parse_fastq(input_fastq):
         is_passed = _is_filter_seq(
             seq_item.sequence,
@@ -201,7 +207,13 @@ def fastq_filter(
             quality_threshold,
         )
         if is_passed:
-            write_fastq(output_fastq, seq_item)
+            _data = serializer.serialize(seq_item)
+            if _data is None:
+                continue
+            write_data(output_fastq, filename, _data)
+            passed += 1
         else:
             not_passed += 1
-    print(f"Filtered {not_passed} sequences")
+    print(f"Filtered {not_passed} sequences. Saved {passed} sequences.")
+    if passed == 0:
+        print("No sequences passed the filter.")

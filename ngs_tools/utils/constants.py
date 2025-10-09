@@ -6,12 +6,18 @@ CRLF = "\r"
 DEFAULT_FILTERED_DIR = "filtered"
 
 
-class FastqSign(Enum, str):
-    head = "@"
-    tail = "+"
+class FastqSign(Enum):
+    header = "@"
+    quality = "+"
 
 
-class FastqStatus(Enum, str):
+class FastqStatus(Enum):
+    waiting_for_sequence = "waiting_for_sequence"
+    waiting_for_quality = "waiting_for_quality"
+    end = "end"
+
+
+class _FastqStatus(Enum):
     waiting_for_header = "waiting_for_header"
     main_header = "main_header"
     sequence = "sequence"
