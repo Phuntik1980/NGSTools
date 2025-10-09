@@ -5,6 +5,8 @@ from ngs_tools.bio_files_processor import (
     convert_multiline_fasta_to_oneline_,
     parse_blast_output_,
     select_genes_from_gbk_to_fasta_,
+    Extension,
+    PREFIX,
 )
 
 
@@ -17,7 +19,10 @@ def convert_multiline_fasta_to_oneline(
     if not output_fastq or not os.path.isfile(output_fastq):
         output_fastq = os.path.join(
             os.path.dirname(input_fastq),
-            os.path.basename(input_fastq) + ".fasta",
+            PREFIX
+            + os.path.basename(input_fastq)
+            + '.'
+            + Extension.FASTA.value,
         )
 
     convert_multiline_fasta_to_oneline_(input_fastq, output_fastq)
