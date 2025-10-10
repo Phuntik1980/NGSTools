@@ -9,3 +9,8 @@ class Fasta:
     @property
     def is_exists(self) -> bool:
         return bool(self.name and self.sequence)
+
+
+@dataclass
+class Fastq(Fasta):
+    quality: str = ''

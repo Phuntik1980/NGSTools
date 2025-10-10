@@ -208,7 +208,12 @@ def fastq_filter(
             _data = serializer.serialize(seq_item)
             if _data is None:
                 continue
-            write_data(output_fastq, filename, _data)
+            write_data(
+                output_dir=output_fastq,
+                filename=filename,
+                _data=_data,
+                use_filtered=True,
+            )
             passed += 1
         else:
             not_passed += 1

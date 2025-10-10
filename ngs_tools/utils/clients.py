@@ -17,12 +17,16 @@ def read_data(input_path_to: str) -> Generator[str, None, None]:
         return None
 
 
-def write_data(output_dir: str, filename: str, _data: str) -> None:
-    filtered_dir = os.path.join(
-        os.path.dirname(output_dir), DEFAULT_FILTERED_DIR
-    )
-    if not os.path.exists(filtered_dir):
-        os.makedirs(filtered_dir)
+def write_data(
+    output_dir: str, filename: str, _data: str, use_filtered: bool = False
+) -> None:
+    path_to_save = os.path.join(output_dir, filename)
+    if use_filtered:
+        path_to_save = os.path.join(
+            os.path.dirname(output_dir), DEFAULT_FILTERED_DIR
+        )
+        if not os.path.exists(path_to_save):
+            os.makedirs(path_to_save)
 
-    with open(os.path.join(filtered_dir, filename), "a") as f:
+    with open(path_to_save, "a") as f:
         f.write(_data)

@@ -8,3 +8,6 @@ class Extension(Enum):
 
 
 PREFIX = 'output_'
+
+BLAST_AIM_COLUMN = 'Description'
+BLAST_DESCRIPTION_WIDTH = 66

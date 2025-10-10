@@ -24,6 +24,10 @@ def convert_multiline_fasta_to_oneline(
             + '.'
             + Extension.FASTA.value,
         )
+        print(
+            f'You don\'t put path to output file. '
+            f'Your output file is taken to {output_fastq}'
+        )
 
     convert_multiline_fasta_to_oneline_(input_fastq, output_fastq)
 
