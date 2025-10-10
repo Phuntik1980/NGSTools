@@ -1,12 +1,4 @@
-from enum import Enum
-
-
-class Extension(Enum):
-    FASTA = "fasta"
-    GBK = "gbk"
-    TXT = "txt"
-
-
+FASTA_EXT = "fasta"
 PREFIX = 'output_'
 
 BLAST_AIM_COLUMN = 'Description'
