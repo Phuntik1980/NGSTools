@@ -1,6 +1,6 @@
 import os
 
-from ngs_tools.bio_files_processor.constants import (
+from ngs_tools.bioinf_tools.constants import (
     BLAST_AIM_COLUMN,
     BLAST_DESCRIPTION_WIDTH,
 )

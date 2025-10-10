@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from ngs_tools.bio_files_processor import (
+from ngs_tools.bioinf_tools import (
     convert_multiline_fasta_to_oneline_,
     parse_blast_output_,
     FASTA_EXT,

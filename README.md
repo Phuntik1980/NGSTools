@@ -99,8 +99,8 @@ Notes:
 Helpers to post-process common bioinformatics text formats.
 
 ```python
-from ngs_tools.bio_files_processor import FASTA_EXT, PREFIX
-from ngs_tools import bio_files_processor as _  # namespace hint
+from ngs_tools.bioinf_tools import FASTA_EXT, PREFIX
+from ngs_tools import bioinf_tools as _  # namespace hint
 ```
 
 Convert multi-line FASTA to one-line-per-sequence:
@@ -109,8 +109,9 @@ Convert multi-line FASTA to one-line-per-sequence:
 from ngs_tools.bio_files_processor import convert_multiline_fasta_to_oneline
 
 convert_multiline_fasta_to_oneline(
-    input_fastq="input.fasta",
-    output_fastq=None,  # if None, file will be created next to input: f"{PREFIX}{basename}.{FASTA_EXT}"
+  input_fastq="input.fasta",
+  output_fastq=None,
+  # if None, file will be created next to input: f"{PREFIX}{basename}.{FASTA_EXT}"
 )
 ```
 
@@ -120,8 +121,8 @@ Parse BLAST output (collect unique values in the Description column):
 from ngs_tools.bio_files_processor import parse_blast_output
 
 parse_blast_output(
-    input_file="blast_output.txt",
-    output_file="descriptions.txt",
+  input_file="blast_output.txt",
+  output_file="descriptions.txt",
 )
 ```
 
