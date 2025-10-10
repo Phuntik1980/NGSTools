@@ -18,6 +18,20 @@ def checking_conditions(
     length_bounds: Union[int, tuple[int, int]] = (0, 2**32),
     quality_threshold: int = 0,
 ):
+    """Validate inputs for FASTQ filtering.
+
+    Checks that paths exist and bounds are within allowed ranges.
+
+    Args:
+        input_fastq (str): Path to an input FASTQ file.
+        output_fastq (str): Path to an existing output directory.
+        gc_bounds (Union[int, tuple[int, int]]): GC upper bound or (min, max).
+        length_bounds (Union[int, tuple[int, int]]): Length upper bound or (min, max).
+        quality_threshold (int): Minimal acceptable mean Phred score (>= 0).
+
+    Returns:
+        bool | None: True if all checks pass; otherwise None and logs a warning.
+    """
     if not input_fastq:
         logger.warning("No sequences provided")
         return None

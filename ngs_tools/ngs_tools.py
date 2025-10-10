@@ -25,8 +25,7 @@ def run_dna_rna_tools(*args) -> Union[Optional[NUCLEIC_ACID_TYPE], bool]:
     each sequence is first checked to be a nucleic acid.
 
     Args:
-        *nucleic_acids (NUCLEIC_ACID_TYPE): One or more sequences to process.
-        tool (str): Tool name from TOOLS_MAPPER.
+        *args: One or more sequences followed by the tool name as the last arg.
 
     Returns:
         Union[Optional[NUCLEIC_ACID_TYPE], bool]: For a single input: single
@@ -47,7 +46,8 @@ def run_dna_rna_tools(*args) -> Union[Optional[NUCLEIC_ACID_TYPE], bool]:
         else:
             if is_check_as_nucleic_acid(nucleic_acid):
                 result.append(TOOLS_MAPPER[tool](nucleic_acid))
-            return None
+            else:
+                return None
 
     return result[0] if len(result) == 1 else result
 
@@ -61,7 +61,7 @@ def filter_fastq(
 ) -> None:
     """Validate inputs and filter FASTQ records by GC, length, and quality.
 
-    This is a thin wrapper over fastq_tools.fastq_filter with input checks.
+    Thin wrapper over fastq_tools.fastq_filter with input checks.
 
     Args:
         input_fastq (str): Path to an input FASTQ file.

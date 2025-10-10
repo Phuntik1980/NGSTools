@@ -12,6 +12,17 @@ from .constants import (
 
 
 def parse_fastq(input_fastq: str) -> Generator[Fastq, None, None]:
+    """Stream-parse a FASTQ file and yield Fastq records.
+
+    A minimal state machine that expects the typical 4-line per record FASTQ
+    layout and emits Fastq dataclass instances as they complete.
+
+    Args:
+        input_fastq (str): Path to an input FASTQ file.
+
+    Yields:
+        Fastq: Dataclass with name, sequence, and quality fields filled.
+    """
     status = FastqStatus.end
 
     record = Fastq()
@@ -36,6 +47,17 @@ def parse_fastq(input_fastq: str) -> Generator[Fastq, None, None]:
 
 
 def parse_multiline_fasta(input_fasta: str) -> Generator[Fasta, None, None]:
+    """Stream-parse a multi-line FASTA file into one-line sequence records.
+
+    Concatenates multi-line sequences until the next header ('>') or EOF and
+    yields a Fasta dataclass with header and joined sequence.
+
+    Args:
+        input_fasta (str): Path to an input FASTA file.
+
+    Yields:
+        Fasta: Dataclass with name (header) and one-line sequence.
+    """
     record = Fasta()
 
     for line in read_data(input_fasta):
