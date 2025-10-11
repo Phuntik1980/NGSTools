@@ -8,4 +8,5 @@ skip-string-normalization = true
     '.venv',
     '*/.venv/*',
     '__init__.py',
+    './ngs_tools/run.py',
     ]

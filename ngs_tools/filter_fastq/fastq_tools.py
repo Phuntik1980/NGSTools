@@ -26,7 +26,8 @@ def checking_conditions(
         input_fastq (str): Path to an input FASTQ file.
         output_fastq (str): Path to an existing output directory.
         gc_bounds (Union[int, tuple[int, int]]): GC upper bound or (min, max).
-        length_bounds (Union[int, tuple[int, int]]): Length upper bound or (min, max).
+        length_bounds (Union[int, tuple[int, int]]): Length upper bound
+            or (min, max).
         quality_threshold (int): Minimal acceptable mean Phred score (>= 0).
 
     Returns:

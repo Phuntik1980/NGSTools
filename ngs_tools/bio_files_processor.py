@@ -11,7 +11,7 @@ from ngs_tools.utils import Serializer
 
 
 def convert_multiline_fasta_to_oneline(
-    input_fastq: str, output_fastq: Optional[str]
+    input_fastq: str, output_fastq: Optional[str] = ''
 ) -> None:
     """Convert a multi-line FASTA file into a one-line-per-sequence FASTA.
 
@@ -26,7 +26,7 @@ def convert_multiline_fasta_to_oneline(
     if not input_fastq or not os.path.isfile(input_fastq):
         return None
 
-    if not output_fastq or not os.path.isfile(output_fastq):
+    if not output_fastq:
         output_fastq = os.path.join(
             os.path.dirname(input_fastq),
             PREFIX + os.path.basename(input_fastq) + '.' + FASTA_EXT,
@@ -53,7 +53,7 @@ def parse_blast_output(input_file: str, output_file: str) -> None:
         print('You don\'t put path to input file')
         return None
 
-    if not output_file or not os.path.isfile(output_file):
+    if not output_file:
         print('You don\'t put path to output file')
         return None
 

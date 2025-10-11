@@ -209,3 +209,5 @@ __marimo__/
 # Custom
 .git/
 .github/
+/ngs_tools/examples/
+/ngs_tools/run.py

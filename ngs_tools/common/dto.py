@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Fasta:
     """Simple container for a FASTA record (header and sequence)."""
+
     name: str = ''
     sequence: str = ''
 
@@ -16,4 +17,5 @@ class Fasta:
 @dataclass
 class Fastq(Fasta):
     """FASTA plus quality line for FASTQ format."""
+
     quality: str = ''
