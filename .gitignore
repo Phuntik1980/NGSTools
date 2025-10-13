@@ -210,4 +210,4 @@ __marimo__/
 .git/
 .github/
 /ngs_tools/examples/
-/ngs_tools/run.py
+/run.py

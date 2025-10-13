@@ -1,4 +1,3 @@
-from logging import getLogger
 from typing import Optional, Union
 
 from ngs_tools.dna_rna_tools import (
@@ -10,12 +9,10 @@ from ngs_tools.dna_rna_tools import (
     is_valid_instrument,
     is_valid_seq,
 )
-from ngs_tools.filter_fastq import checking_conditions, fastq_tools
+from ngs_tools.filter_fastq import fastq_tools
 from ngs_tools.utils import Serializer
 
 serializer = Serializer()
-
-logger = getLogger(__name__)
 
 
 def run_dna_rna_tools(*args) -> Union[Optional[NUCLEIC_ACID_TYPE], bool]:
@@ -58,7 +55,7 @@ def filter_fastq(
     gc_bounds: Union[int, tuple[int, int]] = (0, 100),
     length_bounds: Union[int, tuple[int, int]] = (0, 2**32),
     quality_threshold: int = 0,
-) -> None:
+):
     """Validate inputs and filter FASTQ records by GC, length, and quality.
 
     Thin wrapper over fastq_tools.fastq_filter with input checks.
@@ -75,12 +72,6 @@ def filter_fastq(
     Returns:
         None. Filtered sequences are written to output directory.
     """
-    conditions = checking_conditions(
-        input_fastq, output_fastq, gc_bounds, length_bounds, quality_threshold
-    )
-    if not conditions:
-        return None
-
     fastq_tools.fastq_filter(
         input_fastq,
         output_fastq,
@@ -89,6 +80,3 @@ def filter_fastq(
         quality_threshold,
         serializer,
     )
-
-
-def bio_files_processor(): ...

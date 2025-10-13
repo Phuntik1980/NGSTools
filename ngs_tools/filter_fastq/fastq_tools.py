@@ -89,18 +89,6 @@ def _count_gc(seq: str) -> int:
     return round((gc_value / len(seq)) * 100)
 
 
-def _count_length(seq: str) -> int:
-    """Return sequence length.
-
-    Args:
-        seq (str): Nucleotide sequence.
-
-    Returns:
-        int: Length of the sequence.
-    """
-    return len(seq)
-
-
 def _is_filter_bounds(
     seq: str,
     _bounds: Union[int, tuple[int, int]],
@@ -179,7 +167,7 @@ def _is_filter_seq(
     return all(
         [
             _is_filter_bounds(sequence, gc_bounds, _count_gc),
-            _is_filter_bounds(sequence, length_bounds, _count_length),
+            _is_filter_bounds(sequence, length_bounds, len),
             _is_filter_quality(quality_seq, quality_threshold),
         ]
     )
@@ -208,6 +196,12 @@ def fastq_filter(
     Returns:
         None
     """
+    conditions = checking_conditions(
+        input_fastq, output_fastq, gc_bounds, length_bounds, quality_threshold
+    )
+    if not conditions:
+        return None
+
     not_passed, passed = 0, 0
     filename = f'filtered_{datetime.now().strftime("%Y%m%d%H%M%S")}.fastq'
 
