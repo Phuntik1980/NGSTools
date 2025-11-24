@@ -1,0 +1,12 @@
+[tool.black]
+line-length = 80
+skip-string-normalization = true
+
+[tool.flake8]
+    max-line-length = 80
+    exclude = [
+    '.venv',
+    '*/.venv/*',
+    '__init__.py',
+    './ngs_tools/run.py',
+    ]
