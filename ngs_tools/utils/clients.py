@@ -1,6 +1,6 @@
 """Thin IO helpers used across the package.
 
-- read_data: stream lines from a text file with graceful warning on missing
+- read_data: streamlines from a text file with graceful warning on missing
 - write_data: append string data to a file path (optionally into 'filtered' dir)
 
 """

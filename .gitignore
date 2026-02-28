@@ -211,3 +211,4 @@ __marimo__/
 .github/
 /ngs_tools/examples/
 /run.py
+/test_bio.py
