@@ -1,3 +1,4 @@
+import logging
 import os
 
 from ngs_tools.bioinf_tools.constants import (
@@ -6,6 +7,9 @@ from ngs_tools.bioinf_tools.constants import (
 )
 from ngs_tools.utils import parse_multiline_fasta, read_data, write_data
 from ngs_tools.utils.serializers import Serializer
+
+
+logger = logging.getLogger(__name__)
 
 
 def convert_multiline_fasta_to_oneline_(
@@ -21,6 +25,11 @@ def convert_multiline_fasta_to_oneline_(
         serializer (Serializer): Serializer to convert DTO into text.
     """
     output_dir, filename = os.path.split(output_fastq)
+    logger.info(
+        "Writing one-line FASTA to %s (input: %s)",
+        output_fastq,
+        input_fastq,
+    )
     for record in parse_multiline_fasta(input_fastq):
         serialized_data = serializer.serialize(record)
 
@@ -41,6 +50,7 @@ def parse_blast_output_(input_file: str, output_file: str):
         output_file (str): Path to destination text file.
     """
     output_dir, filename = os.path.split(output_file)
+    logger.info("Parsing BLAST output %s -> %s", input_file, output_file)
     collected_proteins = set()
     waiting_for_aim = False
     for line in read_data(input_file):

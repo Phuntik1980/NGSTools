@@ -7,7 +7,7 @@ from ngs_tools.constants import (
 )
 
 
-def _check_filter_fastq_args(
+def check_filter_fastq_args(
     input_fastq: str,
     output_fastq: str,
     gc_bounds: int | tuple[int, int] = DEFAULT_GC_BOUNDS,
@@ -52,7 +52,7 @@ def _check_filter_fastq_args(
     return True
 
 
-def _value_in_bounds(value: int, bounds: int | tuple[int, int]) -> bool:
+def value_in_bounds(value: int, bounds: int | tuple[int, int]) -> bool:
     """Return whether `value` satisfies an upper-bound or a `(min, max)` range.
 
     `bounds` may be either:
@@ -66,7 +66,7 @@ def _value_in_bounds(value: int, bounds: int | tuple[int, int]) -> bool:
     return value <= bounds
 
 
-def _mean_quality_phred33(qualities: list[int]) -> int:
+def mean_quality_phred33(qualities: list[int]) -> int:
     """Compute mean per-read quality for Phred+33 encoded FASTQ.
 
     Biopython exposes FASTQ qualities as integers already decoded from

@@ -21,6 +21,64 @@ source .venv/bin/activate
 pip install .
 ```
 
+## Command-line interface (CLI)
+
+После установки доступна команда `ngs_tools`.
+
+При запуске создаётся лог-файл `ngs_tools.log` в директории, из которой запускается команда.
+
+Справка:
+
+```bash
+ngs_tools -h
+ngs_tools --help
+```
+
+Глобальные режимы:
+- `-v/--verbose` — подробные сообщения об ошибках
+- `-s/--silent` — подавить обычный вывод (stdout)
+
+### bio_seq
+
+Подкоманды для операций над последовательностями:
+
+```bash
+ngs_tools bio_seq -h
+
+ngs_tools bio_seq dna -q ATGCGATCG -a complement
+ngs_tools bio_seq dna -q ATGCGATCG -a transcribe
+
+ngs_tools bio_seq rna -q AUGCGAUCG -a reverse-complement
+
+ngs_tools bio_seq protein -q MKTAYIAKQRQISFVK -a molecular-weight
+```
+
+### fastq_filter
+
+Фильтрация FASTQ по GC%, длине и среднему качеству:
+
+```bash
+ngs_tools fastq_filter -h
+
+ngs_tools fastq_filter \
+  -i reads.fastq \
+  -o ./out \
+  -g 40 -G 60 \
+  -l 50 -L 250 \
+  -q 30
+```
+
+### bioinf_tools
+
+Файловые утилиты:
+
+```bash
+ngs_tools bioinf_tools -h
+
+ngs_tools bioinf_tools convert-fasta -i input.fasta -o output.fasta
+ngs_tools bioinf_tools parse-blast -i blast_output.txt -o descriptions.txt
+```
+
 ## Public API
 
 This repo is not a single consolidated library API anymore. Use the modules

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import logging
 
 from ngs_tools.constants import (
     AMINO_ACID_WATER_LOSS,
@@ -6,6 +7,9 @@ from ngs_tools.constants import (
     BIOSEQ_STR_MAX_LEN,
     BIOSEQ_STR_PREFIX_LEN,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class BiologicalSequence(ABC):
@@ -41,7 +45,7 @@ class BioSeq(BiologicalSequence):
     The sequence is stored uppercased. Subclasses define `ALPHABET`.
     """
 
-    __ALPHABET: set[str]
+    _ALPHABET: set[str]
 
     def __init__(self, sequence: str):
         self._sequence = sequence.upper()
@@ -77,7 +81,7 @@ class BioSeq(BiologicalSequence):
 
     def is_valid_alphabet(self) -> bool:
         """Return `True` if all symbols in the sequence belong to `ALPHABET`."""
-        return set(self._sequence).issubset(self.__ALPHABET)
+        return set(self._sequence).issubset(self._ALPHABET)
 
 
 class NucleicAcidSequence(BioSeq):
@@ -89,11 +93,14 @@ class NucleicAcidSequence(BioSeq):
     - `COMPLEMENT_MAP`
     """
 
-    __COMPLEMENT_MAP = {}
-    __ALPHABET = set()
+    _COMPLEMENT_MAP = {}
+    _ALPHABET = set()
 
     def __init__(self, sequence: str):
         if self.__class__ is NucleicAcidSequence:
+            logger.error(
+                "Cannot instantiate abstract class NucleicAcidSequence directly"
+            )
             raise NotImplementedError(
                 "Cannot instantiate abstract class NucleicAcidSequence directly"
             )
@@ -106,12 +113,17 @@ class NucleicAcidSequence(BioSeq):
             ValueError: If the sequence contains symbols outside `ALPHABET`.
         """
         if not self.is_valid_alphabet():
+            logger.error(
+                "Invalid alphabet in sequence for %s: %s",
+                self.__class__.__name__,
+                set(self._sequence) - self._ALPHABET,
+            )
             raise ValueError(
                 f"Invalid alphabet in sequence: "
-                f"{set(self._sequence) - self.ALPHABET}"
+                f"{set(self._sequence) - self._ALPHABET}"
             )
         complemented = "".join(
-            self.__COMPLEMENT_MAP[base] for base in self._sequence
+            self._COMPLEMENT_MAP[base] for base in self._sequence
         )
         return self.__class__(complemented)
 
@@ -127,8 +139,8 @@ class NucleicAcidSequence(BioSeq):
 class DNASequence(NucleicAcidSequence):
     """DNA sequence limited to the canonical alphabet A/T/G/C."""
 
-    __ALPHABET = {"A", "T", "G", "C"}
-    __COMPLEMENT_MAP = {"A": "T", "T": "A", "G": "C", "C": "G"}
+    _ALPHABET = {"A", "T", "G", "C"}
+    _COMPLEMENT_MAP = {"A": "T", "T": "A", "G": "C", "C": "G"}
 
     def transcribe(self) -> "RNASequence":
         """Transcribe DNA to RNA by replacing thymine (`T`) with uracil (`U`).
@@ -141,9 +153,13 @@ class DNASequence(NucleicAcidSequence):
                 alphabet.
         """
         if not self.is_valid_alphabet():
+            logger.error(
+                "Invalid alphabet in sequence for DNASequence: %s",
+                set(self._sequence) - self._ALPHABET,
+            )
             raise ValueError(
                 f"Invalid alphabet in sequence: "
-                f"{set(self._sequence) - self.ALPHABET}"
+                f"{set(self._sequence) - self._ALPHABET}"
             )
         rna_sequence = self._sequence.replace("T", "U")
         return RNASequence(rna_sequence)
@@ -152,8 +168,8 @@ class DNASequence(NucleicAcidSequence):
 class RNASequence(NucleicAcidSequence):
     """RNA sequence limited to the canonical alphabet A/U/G/C."""
 
-    __ALPHABET = {"A", "U", "G", "C"}
-    __COMPLEMENT_MAP = {"A": "U", "U": "A", "G": "C", "C": "G"}
+    _ALPHABET = {"A", "U", "G", "C"}
+    _COMPLEMENT_MAP = {"A": "U", "U": "A", "G": "C", "C": "G"}
 
 
 class AminoAcidSequence(BioSeq):
@@ -162,7 +178,7 @@ class AminoAcidSequence(BioSeq):
     Provides a convenience method to compute the peptide molecular weight.
     """
 
-    __ALPHABET = set("ACDEFGHIKLMNPQRSTVWY")
+    _ALPHABET = set("ACDEFGHIKLMNPQRSTVWY")
 
     MOLECULAR_WEIGHTS = {
         "A": 89.09,
@@ -200,9 +216,13 @@ class AminoAcidSequence(BioSeq):
             ValueError: If the sequence contains symbols outside `ALPHABET`.
         """
         if not self.is_valid_alphabet():
+            logger.error(
+                "Invalid amino acids in sequence for AminoAcidSequence: %s",
+                set(self._sequence) - self._ALPHABET,
+            )
             raise ValueError(
                 f"Invalid amino acids in sequence: "
-                f"{set(self._sequence) - self.__ALPHABET}"
+                f"{set(self._sequence) - self._ALPHABET}"
             )
         weight = sum(self.MOLECULAR_WEIGHTS[aa] for aa in self._sequence)
         water_loss = (len(self._sequence) - 1) * AMINO_ACID_WATER_LOSS

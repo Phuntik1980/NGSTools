@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -8,6 +9,8 @@ from ngs_tools.bioinf_tools import (
     PREFIX,
 )
 from ngs_tools.utils import Serializer
+
+logger = logging.getLogger(__name__)
 
 
 def convert_multiline_fasta_to_oneline(
@@ -24,6 +27,7 @@ def convert_multiline_fasta_to_oneline(
             If empty, it will be inferred next to the input file.
     """
     if not input_fastq or not os.path.isfile(input_fastq):
+        logger.error("Input FASTA file does not exist: %s", input_fastq)
         return None
 
     if not output_fastq:
@@ -31,12 +35,18 @@ def convert_multiline_fasta_to_oneline(
             os.path.dirname(input_fastq),
             PREFIX + os.path.basename(input_fastq) + '.' + FASTA_EXT,
         )
-        print(
-            "Output file path was not provided. "
-            f"Using default path: {output_fastq}"
+        logger.info(
+            "Output file path was not provided. Using default path: %s",
+            output_fastq,
         )
 
+    logger.info(
+        "Converting multi-line FASTA to one-line FASTA: %s -> %s",
+        input_fastq,
+        output_fastq,
+    )
     convert_multiline_fasta_to_oneline_(input_fastq, output_fastq, Serializer())
+    return None
 
 
 def parse_blast_output(input_file: str, output_file: str) -> None:
@@ -50,11 +60,13 @@ def parse_blast_output(input_file: str, output_file: str) -> None:
         output_file (str): Path to a target text file to write results.
     """
     if not input_file or not os.path.isfile(input_file):
-        print('You don\'t put path to input file')
+        logger.error("Input BLAST output file does not exist: %s", input_file)
         return None
 
     if not output_file:
-        print('You don\'t put path to output file')
+        logger.error("Output file path was not provided")
         return None
 
+    logger.info("Parsing BLAST output: %s -> %s", input_file, output_file)
     parse_blast_output_(input_file, output_file)
+    return None
