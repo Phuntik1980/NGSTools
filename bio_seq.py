@@ -41,7 +41,7 @@ class BioSeq(BiologicalSequence):
     The sequence is stored uppercased. Subclasses define `ALPHABET`.
     """
 
-    ALPHABET: set[str]
+    __ALPHABET: set[str]
 
     def __init__(self, sequence: str):
         self._sequence = sequence.upper()
@@ -77,7 +77,7 @@ class BioSeq(BiologicalSequence):
 
     def is_valid_alphabet(self) -> bool:
         """Return `True` if all symbols in the sequence belong to `ALPHABET`."""
-        return set(self._sequence).issubset(self.ALPHABET)
+        return set(self._sequence).issubset(self.__ALPHABET)
 
 
 class NucleicAcidSequence(BioSeq):
@@ -89,8 +89,8 @@ class NucleicAcidSequence(BioSeq):
     - `COMPLEMENT_MAP`
     """
 
-    COMPLEMENT_MAP = {}
-    ALPHABET = set()
+    __COMPLEMENT_MAP = {}
+    __ALPHABET = set()
 
     def __init__(self, sequence: str):
         if self.__class__ is NucleicAcidSequence:
@@ -111,7 +111,7 @@ class NucleicAcidSequence(BioSeq):
                 f"{set(self._sequence) - self.ALPHABET}"
             )
         complemented = "".join(
-            self.COMPLEMENT_MAP[base] for base in self._sequence
+            self.__COMPLEMENT_MAP[base] for base in self._sequence
         )
         return self.__class__(complemented)
 
@@ -127,8 +127,8 @@ class NucleicAcidSequence(BioSeq):
 class DNASequence(NucleicAcidSequence):
     """DNA sequence limited to the canonical alphabet A/T/G/C."""
 
-    ALPHABET = {"A", "T", "G", "C"}
-    COMPLEMENT_MAP = {"A": "T", "T": "A", "G": "C", "C": "G"}
+    __ALPHABET = {"A", "T", "G", "C"}
+    __COMPLEMENT_MAP = {"A": "T", "T": "A", "G": "C", "C": "G"}
 
     def transcribe(self) -> "RNASequence":
         """Transcribe DNA to RNA by replacing thymine (`T`) with uracil (`U`).
@@ -152,8 +152,8 @@ class DNASequence(NucleicAcidSequence):
 class RNASequence(NucleicAcidSequence):
     """RNA sequence limited to the canonical alphabet A/U/G/C."""
 
-    ALPHABET = {"A", "U", "G", "C"}
-    COMPLEMENT_MAP = {"A": "U", "U": "A", "G": "C", "C": "G"}
+    __ALPHABET = {"A", "U", "G", "C"}
+    __COMPLEMENT_MAP = {"A": "U", "U": "A", "G": "C", "C": "G"}
 
 
 class AminoAcidSequence(BioSeq):
@@ -162,7 +162,7 @@ class AminoAcidSequence(BioSeq):
     Provides a convenience method to compute the peptide molecular weight.
     """
 
-    ALPHABET = set("ACDEFGHIKLMNPQRSTVWY")
+    __ALPHABET = set("ACDEFGHIKLMNPQRSTVWY")
 
     MOLECULAR_WEIGHTS = {
         "A": 89.09,
@@ -202,7 +202,7 @@ class AminoAcidSequence(BioSeq):
         if not self.is_valid_alphabet():
             raise ValueError(
                 f"Invalid amino acids in sequence: "
-                f"{set(self._sequence) - self.ALPHABET}"
+                f"{set(self._sequence) - self.__ALPHABET}"
             )
         weight = sum(self.MOLECULAR_WEIGHTS[aa] for aa in self._sequence)
         water_loss = (len(self._sequence) - 1) * AMINO_ACID_WATER_LOSS

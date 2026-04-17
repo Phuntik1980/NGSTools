@@ -1,20 +1,16 @@
-from typing import Union
 from datetime import datetime
 from pathlib import Path
+from typing import Union
 
 from Bio import SeqIO
 from Bio.SeqUtils import GC123
 
-from ngs_tools.utils import *
-from ngs_tools.constants import (
-    DEFAULT_GC_BOUNDS,
-    DEFAULT_LENGTH_BOUNDS,
-    DEFAULT_QUALITY_THRESHOLD,
-    FASTQ_FILTERED_PREFIX,
-    FASTQ_EXTENSION,
-    FASTQ_TIMESTAMP_FORMAT,
-    MSG_NO_FASTQ_PASSED,
-)
+from ngs_tools.constants import (DEFAULT_GC_BOUNDS, DEFAULT_LENGTH_BOUNDS,
+                                 DEFAULT_QUALITY_THRESHOLD, FASTQ_EXTENSION,
+                                 FASTQ_FILTERED_PREFIX, FASTQ_TIMESTAMP_FORMAT,
+                                 MSG_NO_FASTQ_PASSED)
+from ngs_tools.utils import (_check_filter_fastq_args, _mean_quality_phred33,
+                             _value_in_bounds)
 
 
 def filter_fastq(
