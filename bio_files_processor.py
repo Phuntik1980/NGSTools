@@ -15,13 +15,13 @@ def convert_multiline_fasta_to_oneline(
 ) -> None:
     """Convert a multi-line FASTA file into a one-line-per-sequence FASTA.
 
-    If output path is not provided, it will be created in the same directory
-    as the input with prefix and extension from constants.
+    If the output path is not provided, it is created next to the input file
+    using the prefix and extension defined in the package constants.
 
     Args:
-        input_fastq (str): Path to source multi-line FASTA file.
-        output_fastq (Optional[str]): Path to target one-line FASTA file. If
-            None or empty, it will be inferred next to the input file.
+        input_fastq (str): Path to the source multi-line FASTA file.
+        output_fastq (Optional[str]): Path to the target one-line FASTA file.
+            If empty, it will be inferred next to the input file.
     """
     if not input_fastq or not os.path.isfile(input_fastq):
         return None
@@ -42,8 +42,8 @@ def convert_multiline_fasta_to_oneline(
 def parse_blast_output(input_file: str, output_file: str) -> None:
     """Extract the 'Description' column values from BLAST output.
 
-    This function scans a BLAST text output, collects unique values from the
-    description column and writes a sorted list to the output file.
+    The function scans a BLAST text report, collects unique values from the
+    description column and writes them as a sorted list.
 
     Args:
         input_file (str): Path to a BLAST text output file.
